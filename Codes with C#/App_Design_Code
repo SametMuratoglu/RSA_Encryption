@@ -1,0 +1,109 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlTypes;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace RSA_ENCRYPTION
+{
+    public partial class Form1 : Form
+    {
+        RSA_ENCRYPTION RSA_Service;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RSA_Service = new RSA_ENCRYPTION();
+            txtPublic.Text = RSA_Service.publicKeyStr;
+            txtPrivate.Text = RSA_Service.privateKeyStr;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnencrypt_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtText.Text))
+            {
+                MessageBox.Show("Uyarı, şifreleme işlemi için soldaki metin kutusunu doldurun!");
+            }
+            else
+            {
+                txtKey.Text = RSA_Service.Encrypt(txtText.Text);
+                txtText.Clear();
+            }
+        }
+
+        private void btndecrypte_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtKey.Text))
+            {
+                MessageBox.Show("Çözülecek bir şifre yok ortada!");
+            }
+            else 
+            {
+                try
+                { 
+                    txtText.Text = RSA_Service.Decrypt(txtKey.Text); 
+                }
+                catch 
+                {
+                    MessageBox.Show("HATA", "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
+                txtKey.Clear();
+            }
+                
+        }
+
+        private void txtKey_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void btnencrypt_MouseHover(object sender, EventArgs e)
+        {
+            btnencrypt.BackColor = Color.Red;
+        }
+
+        private void btnencrypt_MouseLeave(object sender, EventArgs e)
+        {
+            btnencrypt.BackColor = Color.White;
+        }
+
+        private void txtPrivate_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtPublic_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtText_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
