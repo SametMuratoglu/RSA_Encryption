@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+
+namespace RSA_ENCRYPTION
+{
+    internal class RSA_ENCRYPTION
+    {
+        private static RSACryptoServiceProvider csp;
+        public RSAParameters privateKey;
+        public RSAParameters publicKey;
+        public string privateKeyStr;
+        public string publicKeyStr;
+
+        public RSA_ENCRYPTION()
+        {
+            csp = new RSACryptoServiceProvider(2048);
+            privateKey = csp.ExportParameters(true);
+            publicKey = csp.ExportParameters(false);
+            privateKeyStr = csp.ToXmlString(true);
+            publicKeyStr = csp.ToXmlString(false);
+        }
+
+        public string GetPublicKey()
+        {
+            var sw = new StringWriter();       
+            var xs = new XmlSerializer(typeof(RSAParameters));
+            xs.Serialize(sw, publicKey);
+            return sw.ToString();
+        }                                  
+        
+        public String Encrypt(string plainText)
+        {
+            csp = new RSACryptoServiceProvider();
+            csp.ImportParameters(publicKey);
+            var data = Encoding.Unicode.GetBytes(plainText);
+            var cypher = csp.Encrypt(data, false);
+            return Convert.ToBase64String(cypher);
+        }
+
+        public String Decrypt(string cypherText)
+        {
+            var dataBytes = Convert.FromBase64String(cypherText);
+            csp.ImportParameters(privateKey);
+            var plainText = csp.Decrypt(dataBytes, false);
+            return Encoding.Unicode.GetString(plainText);
+        }
+
+        
+    }
+}
